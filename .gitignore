@@ -27,3 +27,6 @@ npm-debug.log
 
 # webstorm
 .idea/*
+
+# vsc
+.vscode/*
