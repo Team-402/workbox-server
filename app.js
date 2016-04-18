@@ -4,51 +4,48 @@
 
 'use strict';
 
-var path = require('path');
-var staticCache = require('koa-static-cache');
-var favicon = require('koa-favicon');
-var json = require('koa-json');
-var bodyparser = require('koa-bodyparser');
+// require core modules
+const path = require('path');
 
-var app = new (require('koa'))();
-var koa = new (require('koa-router'))();
+// require thirdpart modules
+const Koa = require('koa');
+const staticCache = require('koa-static-cache');
+const favicon = require('koa-favicon');
+const json = require('koa-json');
+const bodyparser = require('koa-bodyparser');
 
-var hbs = require('./lib/common/hbs');
-var logger = require('./lib/common/logger');
+// require custom modules
+const hbs = require('./lib/common/hbs');
+const logger = require('./lib/common/logger');
+
+var app = new Koa();
 var log = logger.getLogger(__filename);
 
+var staticPath = path.join(__dirname, 'public');
+var viewPath = path.join(__dirname, 'views');
+
 // global middlewares
-app.use(favicon(path.join(__dirname, 'favicon.ico')));
-app.use(staticCache(path.join(__dirname, 'public'), {
+app.use(favicon(path.join(staticPath, 'favicon.ico')));
+app.use(staticCache(staticPath, {
     maxAge: 365 * 24 * 60 * 60
+}));
+app.use(logger.getConnect());
+app.use(hbs.middleware({
+    viewPath: viewPath,
+    partialsPath: path.join(viewPath, 'partials'),
+    defaultLayout: 'layout',
+    layoutsPath: viewPath
 }));
 app.use(json());
 app.use(bodyparser());
-app.use(hbs.middleware({
-    viewPath: path.join(__dirname, 'views'),
-    partialsPath: path.join(__dirname, 'views', 'partials'),
-    defaultLayout: 'layout',
-    layoutsPath: path.join(__dirname, 'views')
-}));
-//app.use(logger.getConnect());
-
-// routes definition
-var router = require('./lib/routes').router;
-koa.use(function* (next){
-    try{
-        return yield* next;
-    }catch(err){
-        log.error('route eeror: ', err.stack);
-        return this.body = err.stack;
-    }
-});
-koa.use(router.routes(), router.allowedMethods());
 
 // mount root routes
-app.use(koa.routes());
+var router = require('./lib/routes').router;
+app.use(router.routes());
 
+// error
 app.on('error', function(err, ctx){
-    log.error('server error: ', err, '\n context:\n', ctx);
+    log.error('server error.\n', err.stack, '\n context:\n', JSON.stringify(ctx));
 });
 
 module.exports.app = app;

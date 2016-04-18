@@ -1,3 +1,4 @@
+
 DROP TABLE IF EXISTS `user_info`;
 CREATE TABLE `user_info` (
 	`user_id` VARCHAR(64) NOT NULL COMMENT '用户ID',
@@ -18,7 +19,6 @@ CREATE TABLE `user_info` (
 	PRIMARY KEY (`user_id`),
 	KEY `work_id` (`work_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '用户信息表';
-
 
 DROP TABLE IF EXISTS `city_info`;
 CREATE TABLE `city_info` (
