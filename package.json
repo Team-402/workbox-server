@@ -20,8 +20,5 @@
     "log4js": "^0.6.33",
     "mysql": "^2.10.2",
     "sequelize": "^3.21.0"
-  },
-  "devDependencies": {
-    "eslint": "^2.8.0"
   }
 }
