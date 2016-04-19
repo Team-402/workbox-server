@@ -11,9 +11,8 @@ var config = require('config');
 var app = require('../app').app;
 var log = require('../lib/common/logger').getLogger(path.basename(__filename));
 
-
 var version = require('../package.json').version;
-log.info('VERSION:', version, ', $NODE_ENV:' , app.env);
+log.info('VERSION:', version, ', $NODE_ENV:', app.env);
 
 /**
  * Get port from environment and store in Express.

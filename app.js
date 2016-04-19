@@ -45,7 +45,7 @@ app.use(router.routes());
 
 // error
 app.on('error', function(err, ctx){
-    log.error('server error.\n', err.stack, '\n context:\n', JSON.stringify(ctx));
+    log.error('server error.\n', err.stack, '\ncontext: ', JSON.stringify(ctx));
 });
 
 module.exports.app = app;
